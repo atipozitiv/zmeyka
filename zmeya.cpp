@@ -6,9 +6,11 @@
 **********************************/
 
 #include <iostream>
-#include <conio.h>
+#include <conio.h>  // для getch
 #include <windows.h>
 using namespace std;
+
+bool alive = true;
 
 void firstMiniature() {
   cout << " Zmeyka    ih     k     lqsdfh\n";
@@ -28,6 +30,7 @@ void firstMiniature() {
   cout << "    D     X  F       QDSQKE\n";
   cout << "   S      Q   W     E      Q\n";
   cout << "  K       D    A   R        S\n";
+  sleep(2000);
 }
 
 void secondMiniature() {
@@ -40,19 +43,32 @@ void secondMiniature() {
   cout << "ТЫПРОИГРАЛТЫПРОИГРАЛТЫПРОИГРАЛ\nТЫПРОИГРАЛТЫПРОИГРАЛТЫПРОИГРАЛ\n";
 }
 
-bool alive = true;
-
-void drawScrean() {
-  
+void playGame() {
+  cout << ",,,,,,,,,,,,,,,,,,,,,,,\n";
+  cout << "|                     |\n";
+  cout << "|                     |\n";
+  cout << "|                     |\n";
+  cout << "|                     |\n";
+  cout << "|                     |\n";
+  cout << "|                     |\n";
+  cout << "|                     |\n" << flush;
+  cout << "|                     |\n";
+  cout << "|                     |\n";
+  cout << "|                     |\n";
+  cout << "|                     |\n";
+  cout << "'''''''''''''''''''''''";
 }
+
+int snakesHead[2] = {1, 6}; 
 
 int main() {
   firstMiniature();
-  system("cls");
   system("pause");
+  system("cls");
   while (alive) {
-    drawScrean
+    playGame();
   }
+  system("cls");
   secondMiniature();
   return 0;
 }

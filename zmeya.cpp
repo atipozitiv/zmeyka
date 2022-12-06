@@ -9,7 +9,6 @@
 #include <windows.h>
 #include <locale.h>
 #include <string>
-//мб нужен math
 using namespace std;
 
 int snakeHead[2] = {2, 7};
@@ -17,7 +16,15 @@ int apple[2];
 int tailLength = 2;
 int score = 0;
 bool alive = true;
+bool halfApple = false; 
 char orientation = 's';
+int tailString[200];
+int tailColumn[200];
+tailString[0] = 0;
+tailColumn[0] = 7;
+tailString[1] = 1;
+tailColumn[1] = 7;
+int turnForTail = 0;
 
 void firstMiniature() {
   cout << " Zmeyka    ih     k     lqsdfh\n";
@@ -95,14 +102,6 @@ int snakeOnMap[13][15] = { {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0} };
 
-int tailString[200];
-int tailColumn[200];
-tailString[0] = 0;
-tailColumn[0] = 7;
-tailString[1] = 1;
-tailColumn[1] = 7;
-int turnForTail = 0;
-
 void workWithTail() {
   if (!halfApple) {
     snakeOnMap[tailString[turnForTail]][tailColumn[turnForTail]] = 0;
@@ -147,9 +146,7 @@ void moveSnake() {
     spawnApple();
     halfApple = true;
   }  
-}
-
-bool halfApple = false;      
+}     
 
 void spawnApple() {
   int countOfNull = 0;
@@ -194,7 +191,6 @@ void playGame() {
   gameWindow = gameWindow + "'''''''''''''''''''''''''''''''\n\nсчет: " + to_string(score);
   system("cls");
   cout << gameWindow;
-
 }
 
 int main() {

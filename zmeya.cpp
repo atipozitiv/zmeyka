@@ -80,7 +80,7 @@ void secondMiniature() {
                   счет: 
 */
 
-// 0 - ничего ; 1 - тело ; 2 - голова
+// 0 - ничего ; 1 - тело ; 2 - голова ; 3 - яблоко
 int snakeOnMap[13][15] = { {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
                            {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
                            {0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0},
@@ -104,7 +104,11 @@ tailColumn[1] = 7;
 int turnForTail = 0;
 
 void workWithTail() {
-  snakeOnMap[tailString[turnForTail]][tailColumn[turnForTail]] = 0;
+  if (!halfApple) {
+    snakeOnMap[tailString[turnForTail]][tailColumn[turnForTail]] = 0;
+  }  else {
+    halfApple = false; 
+  }  
   int position = (turnForTail + tailLength) % 200;
   tailString[position] = snakeHead[0];
   tailColumn[position] = snakeHead[1];
@@ -137,11 +141,36 @@ void moveSnake() {
     snakeOnMap[snakeHead[0]][snakeHead[1]] = 2;
     snakeOnMap[snakeHead[0]][snakeHead[1] - 1] = 1;
   }
+  
+  if ((snakeHead[0] == apple[0]) && (snakeHead[1] == apple[1]) {
+    score += 50;
+    spawnApple();
+    halfApple = true;
+  }  
 }
 
+bool halfApple = false;      
+
 void spawnApple() {
-  
-  rand()
+  int countOfNull = 0;
+  for (int mapString = 0; mapString < 13; ++mapString) {
+    for (int mapColumn = 0; mapColumn < 15; ++mapColumn) {
+      if (snakeOnMap[mapString][mapColumn] == 0) ++countOfNull;
+    }  
+  }  
+  int applePozition = rand() % countOfNull;
+  for (int mapString = 0; mapString < 13; ++mapString) {
+    for (int mapColumn = 0; mapColumn < 15; ++mapColumn) {
+      if (snakeOnMap[mapString][mapColumn] == 0) {
+        --countOfNull;
+        if (countOfNull == 0) {
+          snakeOnMap[mapString][mapColumn] = 3;
+          apple[0] = mapString;
+          apple[1] = mapColumn;
+        }  
+      }  
+    }  
+  }
 }
 
 char checkPosition(int string, int column) {
@@ -176,14 +205,18 @@ int main() {
   system("cls");
   playGame();
   Sleep(350);
-
+  
+  spawnApple();
   int speed = 0;
   while (alive) {
     if (GetAsyncKeyState(0x57)) orientation = 'w';
     if (GetAsyncKeyState(0x41)) orientation = 'a';
     if (GetAsyncKeyState(0x53)) orientation = 's';
     if (GetAsyncKeyState(0x44)) orientation = 'd';
-    if (speed == 49999) playGame();
+    if (speed == 49999) {
+      playGame();
+      score += 1;
+    }  
     ++speed;
     speed = speed % 50000;
   }

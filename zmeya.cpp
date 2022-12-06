@@ -9,10 +9,12 @@
 #include <windows.h>
 #include <locale.h>
 #include <string>
+//мб нужен math
 using namespace std;
 
 int snakeHead[2] = {2, 7};
-int snakeLength = 3;
+int apple[2];
+int tailLength = 2;
 int score = 0;
 bool alive = true;
 char orientation = 's';
@@ -93,6 +95,23 @@ int snakeOnMap[13][15] = { {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0} };
 
+int tailString[200];
+int tailColumn[200];
+tailString[0] = 0;
+tailColumn[0] = 7;
+tailString[1] = 1;
+tailColumn[1] = 7;
+int turnForTail = 0;
+
+void workWithTail() {
+  snakeOnMap[tailString[turnForTail]][tailColumn[turnForTail]] = 0;
+  int position = (turnForTail + tailLength) % 200;
+  tailString[position] = snakeHead[0];
+  tailColumn[position] = snakeHead[1];
+  turnForTail += 1;
+  turnForTail = turnForTail % 200;
+}
+
 void moveSnake() {
   if (orientation == 's') {
     if ((snakeHead[0] == 12) || (snakeOnMap[snakeHead[0] + 1][snakeHead[1]] == 1)) alive = false;
@@ -120,15 +139,21 @@ void moveSnake() {
   }
 }
 
+void spawnApple() {
+  
+  rand()
+}
+
 char checkPosition(int string, int column) {
   if (snakeOnMap[string][column] == 0) return ' ';
   if (snakeOnMap[string][column] == 1) return '*';
-  return '0';
+  if (snakeOnMap[string][column] == 2) return '0';
+  return 'A';
 }
 
 void playGame() {
+  workWithTail();
   moveSnake();
-  system("cls");
   string gameWindow = ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n";
   for (int snakeString = 0; snakeString < 13; ++snakeString) {
     gameWindow += "|";
@@ -138,6 +163,7 @@ void playGame() {
     gameWindow = gameWindow + checkPosition(snakeString, 14) + "|\n";
   }
   gameWindow = gameWindow + "'''''''''''''''''''''''''''''''\n\nсчет: " + to_string(score);
+  system("cls");
   cout << gameWindow;
 
 }

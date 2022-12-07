@@ -178,7 +178,7 @@ int moveSnake() {
 
 char checkPosition(int string, int column) {
   if (snakeOnMap[string][column] == 0) return ' ';
-  if (snakeOnMap[string][column] == 1) return 'z';
+  if (snakeOnMap[string][column] == 1) return '*';
   if (snakeOnMap[string][column] == 2) return '0';
   return 'A';
 }

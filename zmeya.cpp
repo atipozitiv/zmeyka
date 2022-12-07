@@ -11,19 +11,15 @@
 #include <string>
 using namespace std;
 
-int snakeHead[2] = {2, 7};
+int snakeHead[2] = { 2, 7 };
 int apple[2];
 int tailLength = 2;
 int score = 0;
 bool alive = true;
-bool halfApple = false; 
+bool halfApple = false;
 char orientation = 's';
 int tailString[200];
 int tailColumn[200];
-tailString[0] = 0;
-tailColumn[0] = 7;
-tailString[1] = 1;
-tailColumn[1] = 7;
 int turnForTail = 0;
 
 void firstMiniature() {
@@ -66,7 +62,7 @@ void secondMiniature() {
     cout << "ТЫПРОИГРАЛТЫПРОИГРАЛТЫПРОИГРАЛ\nТЫПРОИГРАЛТЫПРОИГРАЛТЫПРОИГРАЛ\n";
     system("cls");
   }
-} 
+}
 
 /*                ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
  карта:           |                             |
@@ -83,8 +79,7 @@ void secondMiniature() {
                   |                             |
                   |                             |
                   '''''''''''''''''''''''''''''''
-
-                  счет: 
+                  счет:
 */
 
 // 0 - ничего ; 1 - тело ; 2 - голова ; 3 - яблоко
@@ -105,17 +100,42 @@ int snakeOnMap[13][15] = { {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
 void workWithTail() {
   if (!halfApple) {
     snakeOnMap[tailString[turnForTail]][tailColumn[turnForTail]] = 0;
-  }  else {
-    halfApple = false; 
-  }  
+  }
+  else {
+    halfApple = false;
+    turnForTail -= 1;
+  }
   int position = (turnForTail + tailLength) % 200;
   tailString[position] = snakeHead[0];
   tailColumn[position] = snakeHead[1];
-  turnForTail += 1;
-  turnForTail = turnForTail % 200;
+  turnForTail = (turnForTail + 1) % 200;
 }
 
-void moveSnake() {
+void spawnApple() {
+  int countOfNull = 0;
+  for (int mapString = 0; mapString < 13; ++mapString) {
+    for (int mapColumn = 0; mapColumn < 15; ++mapColumn) {
+      if (snakeOnMap[mapString][mapColumn] == 0) ++countOfNull;
+    }
+  }
+  cout << countOfNull;
+  int applePozition = rand() % countOfNull;
+
+  for (int mapString = 0; mapString < 13; ++mapString) {
+    for (int mapColumn = 0; mapColumn < 15; ++mapColumn) {
+      if (snakeOnMap[mapString][mapColumn] == 0) {
+        --applePozition;
+        if (applePozition == 0) {
+          snakeOnMap[mapString][mapColumn] = 3;
+          apple[0] = mapString;
+          apple[1] = mapColumn;
+        }
+      }
+    }
+  }
+}
+
+int moveSnake() {
   if (orientation == 's') {
     if ((snakeHead[0] == 12) || (snakeOnMap[snakeHead[0] + 1][snakeHead[1]] == 1)) alive = false;
     snakeHead[0] += 1;
@@ -123,7 +143,10 @@ void moveSnake() {
     snakeOnMap[snakeHead[0] - 1][snakeHead[1]] = 1;
   }
   if (orientation == 'w') {
-    if ((snakeHead[0] == 0) || (snakeOnMap[snakeHead[0] - 1][snakeHead[1]] == 1)) alive = false;
+    if ((snakeHead[0] == 0) || (snakeOnMap[snakeHead[0] - 1][snakeHead[1]] == 1)) {
+      alive = false;
+      return 0;
+    }
     snakeHead[0] -= 1;
     snakeOnMap[snakeHead[0]][snakeHead[1]] = 2;
     snakeOnMap[snakeHead[0] + 1][snakeHead[1]] = 1;
@@ -135,44 +158,27 @@ void moveSnake() {
     snakeOnMap[snakeHead[0]][snakeHead[1] + 1] = 1;
   }
   if (orientation == 'd') {
-    if ((snakeHead[1] == 14) || (snakeOnMap[snakeHead[0]][snakeHead[1] + 1] == 1)) alive = false;
+    if ((snakeHead[1] == 14) || (snakeOnMap[snakeHead[0]][snakeHead[1] + 1] == 1)) {
+      alive = false;
+      return 0;
+    }
     snakeHead[1] += 1;
     snakeOnMap[snakeHead[0]][snakeHead[1]] = 2;
     snakeOnMap[snakeHead[0]][snakeHead[1] - 1] = 1;
   }
-  
-  if ((snakeHead[0] == apple[0]) && (snakeHead[1] == apple[1]) {
+
+  if ((snakeHead[0] == apple[0]) && (snakeHead[1] == apple[1])) {
     score += 50;
     spawnApple();
     halfApple = true;
-  }  
-}     
-
-void spawnApple() {
-  int countOfNull = 0;
-  for (int mapString = 0; mapString < 13; ++mapString) {
-    for (int mapColumn = 0; mapColumn < 15; ++mapColumn) {
-      if (snakeOnMap[mapString][mapColumn] == 0) ++countOfNull;
-    }  
-  }  
-  int applePozition = rand() % countOfNull;
-  for (int mapString = 0; mapString < 13; ++mapString) {
-    for (int mapColumn = 0; mapColumn < 15; ++mapColumn) {
-      if (snakeOnMap[mapString][mapColumn] == 0) {
-        --countOfNull;
-        if (countOfNull == 0) {
-          snakeOnMap[mapString][mapColumn] = 3;
-          apple[0] = mapString;
-          apple[1] = mapColumn;
-        }  
-      }  
-    }  
+    tailLength += 1;
   }
+  return 0;
 }
 
 char checkPosition(int string, int column) {
   if (snakeOnMap[string][column] == 0) return ' ';
-  if (snakeOnMap[string][column] == 1) return '*';
+  if (snakeOnMap[string][column] == 1) return 'z';
   if (snakeOnMap[string][column] == 2) return '0';
   return 'A';
 }
@@ -194,6 +200,10 @@ void playGame() {
 }
 
 int main() {
+  tailString[0] = 0;
+  tailColumn[0] = 7;
+  tailString[1] = 1;
+  tailColumn[1] = 7;
   system("mode con cols=31 lines=17");
   setlocale(LC_ALL, "Russian");
   firstMiniature();
@@ -201,7 +211,7 @@ int main() {
   system("cls");
   playGame();
   Sleep(350);
-  
+
   spawnApple();
   int speed = 0;
   while (alive) {
@@ -211,8 +221,7 @@ int main() {
     if (GetAsyncKeyState(0x44)) orientation = 'd';
     if (speed == 49999) {
       playGame();
-      score += 1;
-    }  
+    }
     ++speed;
     speed = speed % 50000;
   }

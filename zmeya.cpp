@@ -11,6 +11,7 @@
 #include <string>
 using namespace std;
 
+int speedLimit;
 int snakeHead[2] = { 2, 7 };
 int apple[2];
 int tailLength = 2;
@@ -206,6 +207,9 @@ void playGame() {
 }
 
 int main() {
+  cout << "введите скорость от 1 до 10";
+  cin >> speedLimit;
+  speedLimit *= 10000
   tailString[0] = 0;
   tailColumn[0] = 7;
   tailString[1] = 1;
@@ -222,22 +226,30 @@ int main() {
   int speed = 0;
   while (alive) {
     if (GetAsyncKeyState(0x57)) {
-      orientation = 'w';
+      if (orientation != 's') {
+        orientation = 'w';
+      }
     }
     if (GetAsyncKeyState(0x41)) {
-      orientation = 'a';
+      if (orientation != 'd') {
+        orientation = 'a';
+      }
     }
     if (GetAsyncKeyState(0x53)) {
-      orientation = 's';
+      if (orientation != 'w') {
+        orientation = 's';
+      }  
     }
     if (GetAsyncKeyState(0x44)) {
-      orientation = 'd';
+      if (orientation != 'a') {
+        orientation = 'd';
+      }
     }
-    if (speed == 49999) {
+    if (speed == speedLimit - 1) {
       playGame();
     }
     ++speed;
-    speed = speed % 50000;
+    speed = speed % speedLimit;
   }
 
   system("cls");

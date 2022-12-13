@@ -21,6 +21,9 @@ char orientation = 's';
 int tailString[200];
 int tailColumn[200];
 int turnForTail = 0;
+int mapWidth = 15;
+int mapHeight = 13;
+
 
 void firstMiniature() {
   cout << " Zmeyka    ih     k     lqsdfh\n";
@@ -83,7 +86,7 @@ void secondMiniature() {
 */
 
 // 0 - ничего ; 1 - тело ; 2 - голова ; 3 - яблоко
-int snakeOnMap[13][15] = { {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+int snakeOnMap[mapHeight][mapWidth] = { {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
                            {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
                            {0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0},
                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -100,8 +103,7 @@ int snakeOnMap[13][15] = { {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
 void workWithTail() {
   if (!halfApple) {
     snakeOnMap[tailString[turnForTail]][tailColumn[turnForTail]] = 0;
-  }
-  else {
+  } else {
     halfApple = false;
     turnForTail -= 1;
   }
@@ -113,16 +115,16 @@ void workWithTail() {
 
 void spawnApple() {
   int countOfNull = 0;
-  for (int mapString = 0; mapString < 13; ++mapString) {
-    for (int mapColumn = 0; mapColumn < 15; ++mapColumn) {
+  for (int mapString = 0; mapString < mapHeight; ++mapString) {
+    for (int mapColumn = 0; mapColumn < mapWidth; ++mapColumn) {
       if (snakeOnMap[mapString][mapColumn] == 0) ++countOfNull;
     }
   }
   cout << countOfNull;
   int applePozition = rand() % countOfNull;
 
-  for (int mapString = 0; mapString < 13; ++mapString) {
-    for (int mapColumn = 0; mapColumn < 15; ++mapColumn) {
+  for (int mapString = 0; mapString < mapHeight; ++mapString) {
+    for (int mapColumn = 0; mapColumn < mapWidth; ++mapColumn) {
       if (snakeOnMap[mapString][mapColumn] == 0) {
         --applePozition;
         if (applePozition == 0) {
@@ -137,7 +139,9 @@ void spawnApple() {
 
 int moveSnake() {
   if (orientation == 's') {
-    if ((snakeHead[0] == 12) || (snakeOnMap[snakeHead[0] + 1][snakeHead[1]] == 1)) alive = false;
+    if ((snakeHead[0] == mapHeight - 1) || (snakeOnMap[snakeHead[0] + 1][snakeHead[1]] == 1)) {
+      alive = false;
+    }
     snakeHead[0] += 1;
     snakeOnMap[snakeHead[0]][snakeHead[1]] = 2;
     snakeOnMap[snakeHead[0] - 1][snakeHead[1]] = 1;
@@ -152,13 +156,15 @@ int moveSnake() {
     snakeOnMap[snakeHead[0] + 1][snakeHead[1]] = 1;
   }
   if (orientation == 'a') {
-    if ((snakeHead[1] == 0) || (snakeOnMap[snakeHead[0]][snakeHead[1] - 1] == 1)) alive = false;
+    if ((snakeHead[1] == 0) || (snakeOnMap[snakeHead[0]][snakeHead[1] - 1] == 1)) {
+      alive = false;
+    }
     snakeHead[1] -= 1;
     snakeOnMap[snakeHead[0]][snakeHead[1]] = 2;
     snakeOnMap[snakeHead[0]][snakeHead[1] + 1] = 1;
   }
   if (orientation == 'd') {
-    if ((snakeHead[1] == 14) || (snakeOnMap[snakeHead[0]][snakeHead[1] + 1] == 1)) {
+    if ((snakeHead[1] == mapWidth - 1) || (snakeOnMap[snakeHead[0]][snakeHead[1] + 1] == 1)) {
       alive = false;
       return 0;
     }
@@ -187,12 +193,12 @@ void playGame() {
   workWithTail();
   moveSnake();
   string gameWindow = ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n";
-  for (int snakeString = 0; snakeString < 13; ++snakeString) {
+  for (int snakeString = 0; snakeString < mapHeight; ++snakeString) {
     gameWindow += "|";
-    for (int snakeColumn = 0; snakeColumn < 14; ++snakeColumn) {
+    for (int snakeColumn = 0; snakeColumn < mapWidth - 1; ++snakeColumn) {
       gameWindow = gameWindow + checkPosition(snakeString, snakeColumn) + " ";
     }
-    gameWindow = gameWindow + checkPosition(snakeString, 14) + "|\n";
+    gameWindow = gameWindow + checkPosition(snakeString, mapHeight + 1) + "|\n";
   }
   gameWindow = gameWindow + "'''''''''''''''''''''''''''''''\n\nсчет: " + to_string(score);
   system("cls");
@@ -215,10 +221,18 @@ int main() {
   spawnApple();
   int speed = 0;
   while (alive) {
-    if (GetAsyncKeyState(0x57)) orientation = 'w';
-    if (GetAsyncKeyState(0x41)) orientation = 'a';
-    if (GetAsyncKeyState(0x53)) orientation = 's';
-    if (GetAsyncKeyState(0x44)) orientation = 'd';
+    if (GetAsyncKeyState(0x57)) {
+      orientation = 'w';
+    }
+    if (GetAsyncKeyState(0x41)) {
+      orientation = 'a';
+    }
+    if (GetAsyncKeyState(0x53)) {
+      orientation = 's';
+    }
+    if (GetAsyncKeyState(0x44)) {
+      orientation = 'd';
+    }
     if (speed == 49999) {
       playGame();
     }

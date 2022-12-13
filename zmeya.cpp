@@ -104,7 +104,8 @@ int snakeOnMap[mapHeight][mapWidth] = { {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
 void workWithTail() {
   if (!halfApple) {
     snakeOnMap[tailString[turnForTail]][tailColumn[turnForTail]] = 0;
-  } else {
+  }
+  else {
     halfApple = false;
     turnForTail -= 1;
   }
@@ -207,15 +208,16 @@ void playGame() {
 }
 
 int main() {
-  cout << "введите скорость от 1 до 10";
-  cin >> speedLimit;
-  speedLimit *= 10000;
+  setlocale(LC_ALL, "Russian");
   tailString[0] = 0;
   tailColumn[0] = 7;
   tailString[1] = 1;
   tailColumn[1] = 7;
   system("mode con cols=31 lines=17");
-  setlocale(LC_ALL, "Russian");
+  cout << "введите скорость от 1 до 10:\n";
+  cin >> speedLimit;
+  speedLimit *= 10000;
+  system("cls");
   firstMiniature();
   system("pause");
   system("cls");
@@ -238,7 +240,7 @@ int main() {
     if (GetAsyncKeyState(0x53)) {
       if (orientation != 'w') {
         orientation = 's';
-      }  
+      }
     }
     if (GetAsyncKeyState(0x44)) {
       if (orientation != 'a') {

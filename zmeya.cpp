@@ -22,8 +22,8 @@ char orientation = 's';
 int tailString[200];
 int tailColumn[200];
 int turnForTail = 0;
-int mapWidth = 15;
-int mapHeight = 13;
+const int mapWidth = 15;
+const int mapHeight = 13;
 
 
 void firstMiniature() {
@@ -209,7 +209,7 @@ void playGame() {
 int main() {
   cout << "введите скорость от 1 до 10";
   cin >> speedLimit;
-  speedLimit *= 10000
+  speedLimit *= 10000;
   tailString[0] = 0;
   tailColumn[0] = 7;
   tailString[1] = 1;
